@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-
+from copy import deepcopy
 import sys
 import rclpy
 from gazebo_msgs.srv import SpawnEntity
 from gazebo_ros_link_attacher.srv import Attach
-from copy import deepcopy
 from transforms3d.euler import euler2quat
 
-sdf_cube = """<?xml version="1.0" ?>
+SDF_CUBE = """<?xml version="1.0" ?>
 <sdf version="1.4">
   <model name="MODELNAME">
     <static>0</static>
@@ -81,7 +80,7 @@ def create_cube_request(modelname, px, py, pz, rr, rp, ry, sx, sy, sz):
     px py pz: position of the cube (and it's collision cube)
     rr rp ry: rotation (roll, pitch, yaw) of the model
     sx sy sz: size of the cube"""
-    cube = deepcopy(sdf_cube)
+    cube = deepcopy(SDF_CUBE)
     # Replace size of model
     size_str = str(round(sx, 3)) + " " + \
         str(round(sy, 3)) + " " + str(round(sz, 3))
@@ -111,12 +110,11 @@ if __name__ == '__main__':
 
     attach_srv = node.create_client(Attach, '/attach')
     while not attach_srv.wait_for_service(timeout_sec=1.0):
-      node.get_logger().info(f'Waiting for service {attach_srv.srv_name}...')
+        node.get_logger().info(f'Waiting for service {attach_srv.srv_name}...')
 
-    service_name = 'spawn_entity'
     spawn_srv = node.create_client(SpawnEntity, '/spawn_entity')
     while not spawn_srv.wait_for_service(timeout_sec=1.0):
-      node.get_logger().info(f'Waiting for service {spawn_srv.srv_name}...')
+        node.get_logger().info(f'Waiting for service {spawn_srv.srv_name}...')
 
     node.get_logger().info("Connected to service!")
 
@@ -159,13 +157,6 @@ if __name__ == '__main__':
 
     resp = attach_srv.call_async(amsg)
     rclpy.spin_until_future_complete(node, resp)
-    # From the shell:
-    """
-ros2 service call /attach 'gazebo_ros_link_attacher/srv/Attach' '{model_name_1: 'cube1',
-link_name_1: 'link',
-model_name_2: 'cube2',
-link_name_2: 'link'}'
-    """
     node.get_logger().info("Published into linking service!")
 
 

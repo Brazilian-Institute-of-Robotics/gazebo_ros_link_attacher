@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
+from copy import deepcopy
 import sys
 import rclpy
 from gazebo_msgs.srv import SpawnEntity
-from copy import deepcopy
 from transforms3d.euler import euler2quat
 
-sdf_cube = """<?xml version="1.0" ?>
+SDF_CUBE = """<?xml version="1.0" ?>
 <sdf version="1.4">
   <model name="MODELNAME">
     <static>0</static>
@@ -80,7 +80,7 @@ def create_cube_request(modelname, px, py, pz, rr, rp, ry, sx, sy, sz):
     px py pz: position of the cube (and it's collision cube)
     rr rp ry: rotation (roll, pitch, yaw) of the model
     sx sy sz: size of the cube"""
-    cube = deepcopy(sdf_cube)
+    cube = deepcopy(SDF_CUBE)
     # Replace size of model
     size_str = str(round(sx, 3)) + " " + \
         str(round(sy, 3)) + " " + str(round(sz, 3))
@@ -107,13 +107,11 @@ def create_cube_request(modelname, px, py, pz, rr, rp, ry, sx, sy, sz):
 if __name__ == '__main__':
     rclpy.init(args=sys.argv)
     node = rclpy.create_node('spawn_entities')
-
-    service_name = 'spawn_entity'
     spawn_srv = node.create_client(SpawnEntity, '/spawn_entity')
 
     # while not spawn_srv.service_is_ready():
     while not spawn_srv.wait_for_service(timeout_sec=1.0):
-      node.get_logger().info(f'Waiting for service {spawn_srv.srv_name}...')
+        node.get_logger().info(f'Waiting for service {spawn_srv.srv_name}...')
 
     node.get_logger().info("Connected to service!")
 

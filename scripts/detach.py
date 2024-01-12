@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     attach_srv = node.create_client(Attach, '/detach')
     while not attach_srv.wait_for_service(timeout_sec=1.0):
-      node.get_logger().info("Waiting for detach service...")
+        node.get_logger().info("Waiting for detach service...")
 
     # Unlink them
     node.get_logger().info("Detaching cube1 and cube2")
@@ -25,14 +25,6 @@ if __name__ == '__main__':
 
     resp = attach_srv.call_async(req)
     rclpy.spin_until_future_complete(node, resp)
-
-    # From the shell:
-    """
-ros2 service call /detach 'gazebo_ros_link_attacher/srv/Attach' '{model_name_1: 'cube1',
-link_name_1: 'link',
-model_name_2: 'cube2',
-link_name_2: 'link'}'
-    """
 
     node.get_logger().info("Detaching cube2 and cube3")
     req = Attach.Request()
