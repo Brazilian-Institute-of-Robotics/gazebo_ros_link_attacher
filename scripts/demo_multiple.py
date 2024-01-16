@@ -1,4 +1,18 @@
-#!/usr/bin/env python3
+# Copyright (c) 2023, SENAI Cimatec
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# !/usr/bin/env python3
 from copy import deepcopy
 import sys
 import rclpy
@@ -75,11 +89,14 @@ SDF_CUBE = """<?xml version="1.0" ?>
 
 
 def create_cube_request(modelname, px, py, pz, rr, rp, ry, sx, sy, sz):
-    """Create a SpawnModelRequest with the parameters of the cube given.
+    """
+    Create a SpawnModelRequest with the parameters of the cube given.
+
     modelname: name of the model for gazebo
     px py pz: position of the cube (and it's collision cube)
     rr rp ry: rotation (roll, pitch, yaw) of the model
-    sx sy sz: size of the cube"""
+    sx sy sz: size of the cube
+    """
     cube = deepcopy(SDF_CUBE)
     # Replace size of model
     size_str = str(round(sx, 3)) + " " + \
@@ -120,28 +137,31 @@ if __name__ == '__main__':
 
     # Spawn object 1
     node.get_logger().info("Spawning cube1")
-    req1 = create_cube_request("cube1",
-                              0.0, 0.0, 0.51,  # position
-                              0.0, 0.0, 0.0,  # rotation
-                              1.0, 1.0, 1.0)  # size
+    req1 = create_cube_request(
+        "cube1",
+        0.0, 0.0, 0.51,  # position
+        0.0, 0.0, 0.0,  # rotation
+        1.0, 1.0, 1.0)  # size
     resp = spawn_srv.call_async(req1)
     rclpy.spin_until_future_complete(node, resp)
 
     # Spawn object 2
     node.get_logger().info("Spawning cube2")
-    req2 = create_cube_request("cube2",
-                              0.0, 1.1, 0.41,  # position
-                              0.0, 0.0, 0.0,  # rotation
-                              0.8, 0.8, 0.8)  # size
+    req2 = create_cube_request(
+        "cube2",
+        0.0, 1.1, 0.41,  # position
+        0.0, 0.0, 0.0,  # rotation
+        0.8, 0.8, 0.8)  # size
     resp = spawn_srv.call_async(req2)
     rclpy.spin_until_future_complete(node, resp)
 
     # Spawn object 3
     node.get_logger().info("Spawning cube3")
-    req3 = create_cube_request("cube3",
-                              0.0, 2.1, 0.41,  # position
-                              0.0, 0.0, 0.0,  # rotation
-                              0.4, 0.4, 0.4)  # size
+    req3 = create_cube_request(
+        "cube3",
+        0.0, 2.1, 0.41,  # position
+        0.0, 0.0, 0.0,  # rotation
+        0.4, 0.4, 0.4)  # size
 
     resp = spawn_srv.call_async(req3)
     rclpy.spin_until_future_complete(node, resp)
@@ -159,7 +179,6 @@ if __name__ == '__main__':
     rclpy.spin_until_future_complete(node, resp)
     node.get_logger().info("Published into linking service!")
 
-
     node.get_logger().info("Attaching cube2 and cube3")
     amsg = Attach.Request()
     amsg.model_name_1 = "cube2"
@@ -169,7 +188,6 @@ if __name__ == '__main__':
 
     resp = attach_srv.call_async(amsg)
     rclpy.spin_until_future_complete(node, resp)
-
 
     node.get_logger().info("Attaching cube3 and cube1")
     amsg = Attach.Request()

@@ -10,15 +10,15 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS}") 
+set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS}")
 
 ########################
 
 # Load dependencies required for this package
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED) 
-find_package(gazebo_ros REQUIRED) 
-find_package(std_msgs REQUIRED) 
+find_package(rclcpp REQUIRED)
+find_package(gazebo_ros REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(gazebo REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(rmw_implementation_cmake REQUIRED)
@@ -61,9 +61,9 @@ foreach(rmw_implementation ${rmw_implementations2})
 endforeach()
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(${PROJECT_NAME}_plugin 
-  ${ament_cmake_LIBRARIES} 
-  ${gazebo_ros_LIBRARIES} 
+target_link_libraries(${PROJECT_NAME}_plugin
+  ${ament_cmake_LIBRARIES}
+  ${gazebo_ros_LIBRARIES}
   ${rclcpp_LIBRARIES}
   ${std_msgs_LIBRARIES}
   "${cpp_typesupport_target}")
@@ -104,9 +104,27 @@ install(PROGRAMS
   DESTINATION lib/${PROJECT_NAME}
 )
 
-foreach (dir launch worlds)
+foreach(dir launch worlds)
   install(DIRECTORY ${dir}/
-  DESTINATION share/${PROJECT_NAME}/${dir})
-endforeach(dir)
+    DESTINATION share/${PROJECT_NAME}/${dir})
+endforeach()
+
+if(BUILD_DOCS)
+  find_package(ament_cmake_doxygen REQUIRED)
+  ament_doxygen(DOC_TITLE ${PROJECT_NAME})
+endif()
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  set(AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS True)
+  list(APPEND AMENT_LINT_AUTO_EXCLUDE
+    ament_cmake_cpplint
+  )
+  ament_lint_auto_find_test_dependencies()
+
+  find_package(ament_cmake_cpplint REQUIRED)
+  ament_cpplint(MAX_LINE_LENGTH "120")
+  ament_lint_auto_find_test_dependencies()
+endif()
 
 ament_package()
