@@ -1,3 +1,6 @@
+# runner-ci-autoproj provides commands useful to build in CI environments
+# run ci clean cache
+
 name: autoproj-ci-runner
 
 on: [pull_request]
@@ -9,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         distro: [jammy]
-    name: "autoproj-ci-runner"
+    name: "runner-ci-autoproj"
     steps:
       - name: Setup Checkout Code Quality
         uses: actions/checkout@v3
@@ -33,7 +36,7 @@ jobs:
       - uses: ./
         with:
           distro: ${{ matrix.distro }}
-          buildconf-url: git@github.com:Brazilian-Institute-of-Robotics/autoproj_runner_ci-buildconf.git
+          buildconf-url: git@github.com:Brazilian-Institute-of-Robotics/cbr_build_conf.git
           buildconf-branch: main
           seed-config: |
                     ---
@@ -50,7 +53,7 @@ jobs:
                     ros_distro: 'humble'
                     user_shells:
                     - bash
-          project: 'autoproj_runner_ci'
+          project: 'cbr_build_conf'
           packages: '${{ github.event.repository.name }}'
           overrides: |
             ${{ steps.code_quality.outputs.overrides }}
