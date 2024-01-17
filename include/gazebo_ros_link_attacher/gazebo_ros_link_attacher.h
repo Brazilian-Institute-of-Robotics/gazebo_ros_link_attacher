@@ -12,10 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/*
- * Desc: Gazebo link attacher plugin.
- * Author: Sammy Pfeiffer (sam.pfeiffer@pal-robotics.com)
- * Date: 05/04/2016
+/**
+ * @file gazebo_ros_link_attacher.h
+ *
+ * @brief Gazebo link attacher plugin class
+ *
+ * @date April 05, 2016
+ * @authors Sammy Pfeiffer <sam.pfeiffer@pal-robotics.com>
+ *          Claudia Ramos  <claudia.ramos@fieb.org.br>
  */
 
 #ifndef GAZEBO_ROS_LINK_ATTACHER__GAZEBO_ROS_LINK_ATTACHER_H_
@@ -42,23 +46,23 @@
 
 namespace gazebo
 {
+/// \brief Internal representation of a fixed joint
+struct fixedJoint
+{
+  std::string model1;
+  physics::ModelPtr m1;
+  std::string link1;
+  physics::LinkPtr l1;
+  std::string model2;
+  physics::ModelPtr m2;
+  std::string link2;
+  physics::LinkPtr l2;
+  physics::JointPtr joint;
+};
+
 class GazeboRosLinkAttacher: public WorldPlugin
 {
 public:
-  /// \brief Internal representation of a fixed joint
-  struct fixedJoint
-  {
-    std::string model1;
-    physics::ModelPtr m1;
-    std::string link1;
-    physics::LinkPtr l1;
-    std::string model2;
-    physics::ModelPtr m2;
-    std::string link2;
-    physics::LinkPtr l2;
-    physics::JointPtr joint;
-  };
-
   /// \brief Constructor
   GazeboRosLinkAttacher();
 
@@ -83,24 +87,24 @@ public:
     fixedJoint & joint);
 
 private:
-    gazebo_ros::Node::SharedPtr node_;
-    rclcpp::Service < gazebo_ros_link_attacher::srv::Attach > ::SharedPtr attach_service_;
-    rclcpp::Service < gazebo_ros_link_attacher::srv::Attach > ::SharedPtr detach_service_;
+  gazebo_ros::Node::SharedPtr node_;
+  rclcpp::Service < gazebo_ros_link_attacher::srv::Attach > ::SharedPtr attach_service_;
+  rclcpp::Service < gazebo_ros_link_attacher::srv::Attach > ::SharedPtr detach_service_;
 
-    bool attach_callback(
-      const std::shared_ptr < gazebo_ros_link_attacher::srv::Attach::Request > req,
-      std::shared_ptr < gazebo_ros_link_attacher::srv::Attach::Response > res);
-    bool detach_callback(
-      const std::shared_ptr < gazebo_ros_link_attacher::srv::Attach::Request > req,
-      std::shared_ptr < gazebo_ros_link_attacher::srv::Attach::Response > res);
+  bool attach_callback(
+    const std::shared_ptr < gazebo_ros_link_attacher::srv::Attach::Request > req,
+    std::shared_ptr < gazebo_ros_link_attacher::srv::Attach::Response > res);
+  bool detach_callback(
+    const std::shared_ptr < gazebo_ros_link_attacher::srv::Attach::Request > req,
+    std::shared_ptr < gazebo_ros_link_attacher::srv::Attach::Response > res);
 
-    std::vector < fixedJoint > joints_;
+  std::vector < fixedJoint > joints_;
 
-    /// \brief The physics engine.
-    physics::PhysicsEnginePtr physics;
+  /// \brief The physics engine.
+  physics::PhysicsEnginePtr physics;
 
-    /// \brief Pointer to the world.
-    physics::WorldPtr world;
-  };
+  /// \brief Pointer to the world.
+  physics::WorldPtr world;
+};
 }  // namespace gazebo
 #endif  // GAZEBO_ROS_LINK_ATTACHER__GAZEBO_ROS_LINK_ATTACHER_H_

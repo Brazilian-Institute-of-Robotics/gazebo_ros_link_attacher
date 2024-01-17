@@ -29,7 +29,7 @@ Which provides the `/link_attacher_node/attach` service to specify two models an
 
 And `/link_attacher_node/detach` service to specify two models and their links to be detached.
 
-![gazebo screenshot](ss.png)
+![gazebo screenshot](doc/ss.png)
 
 # Run demo
 
