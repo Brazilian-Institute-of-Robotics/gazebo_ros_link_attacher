@@ -1,0 +1,61 @@
+# runner-ci-autoproj provides commands useful to build in CI environments
+# run ci clean cache
+
+name: autoproj-ci-runner
+
+on: [pull_request]
+
+jobs:
+  job-autoproj-test:
+    runs-on: [self-hosted, cimatec-host, linux, x64]
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [jammy]
+    name: "runner-ci-autoproj"
+    steps:
+      - name: Setup Checkout Code Quality
+        uses: actions/checkout@v3
+        with:
+          repository: Brazilian-Institute-of-Robotics/action-code-quality
+          token: ${{ secrets.PAT_ACTION_USER_CIBOT }}
+          ref: main
+      - name: Extract overrides from Pull Request Body
+        uses: ./
+        id: code_quality
+        with:
+          pull_request_body: ${{ github.event.pull_request.body }}
+          local_repository: '- ${{ github.event.repository.name }}:'
+          local_branch: 'branch: ${{ github.head_ref }}'
+      - name: Setup Checkout autoproj CI
+        uses: actions/checkout@v3
+        with:
+          repository: Brazilian-Institute-of-Robotics/bir-autoproj-action
+          token: ${{ secrets.PAT_ACTION_USER_CIBOT }}
+          ref: feat-colcon-suport-humble
+      - uses: ./
+        with:
+          distro: ${{ matrix.distro }}
+          buildconf-url: git@github.com:Brazilian-Institute-of-Robotics/cbr_build_conf.git
+          buildconf-branch: main
+          seed-config: |
+                    ---
+                    apt_dpkg_update: true
+                    osdeps_mode: all
+                    GITORIOUS: ssh
+                    GITHUB: ssh
+                    GITHUB_ROOT: 'git@github.com:'
+                    GITHUB_PUSH_ROOT: 'git@github.com:'
+                    GITHUB_PRIVATE_ROOT: 'git@github.com:'
+                    USE_PYTHON: true
+                    python_executable: "/usr/bin/python3"
+                    ros_version: 2
+                    ros_distro: 'humble'
+                    user_shells:
+                    - bash
+          project: 'cbr_build_conf'
+          packages: '${{ github.event.repository.name }}'
+          overrides: |
+            ${{ steps.code_quality.outputs.overrides }}
+          manifest: |
+            ${{ steps.code_quality.outputs.manifest }}

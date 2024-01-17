@@ -79,30 +79,22 @@ install(TARGETS ${PROJECT_NAME}_plugin
   RUNTIME DESTINATION bin
 )
 
-install(PROGRAMS
-  scripts/demo.py
-  DESTINATION lib/${PROJECT_NAME}
+# List of scripts to install
+set(SCRIPTS
+  demo.py
+  demo_multiple.py
+  spawn_models.py
+  attach.py
+  detach.py
 )
 
-install(PROGRAMS
-  scripts/demo_multiple.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(PROGRAMS
-  scripts/spawn_models.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(PROGRAMS
-  scripts/attach.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(PROGRAMS
-  scripts/detach.py
-  DESTINATION lib/${PROJECT_NAME}
-)
+# Install each script
+foreach(SCRIPT ${SCRIPTS})
+  install(PROGRAMS
+    scripts/${SCRIPT}
+    DESTINATION lib/${PROJECT_NAME}
+  )
+endforeach()
 
 foreach(dir launch worlds)
   install(DIRECTORY ${dir}/
