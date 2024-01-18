@@ -23,7 +23,7 @@ from launch.actions import GroupAction
 from launch.actions import OpaqueFunction
 
 
-def launch_setup():
+def launch_setup(context, *args, **kwargs):
     # Start Gazebo with an empty world file
     gazebo_launch = os.path.join(
         get_package_share_directory('gazebo_ros'), 'launch/gazebo.launch.py')

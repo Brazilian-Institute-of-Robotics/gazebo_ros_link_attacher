@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Copyright (c) 2023, SENAI Cimatec
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# !/usr/bin/env python3
-
-from copy import deepcopy
 import sys
+from copy import deepcopy
 import rclpy
 from gazebo_msgs.srv import SpawnEntity
 from transforms3d.euler import euler2quat
