@@ -22,8 +22,8 @@
  *          Claudia Ramos  <claudia.ramos@fieb.org.br>
  */
 
-#ifndef GAZEBO_ROS_LINK_ATTACHER__GAZEBO_ROS_LINK_ATTACHER_H_
-#define GAZEBO_ROS_LINK_ATTACHER__GAZEBO_ROS_LINK_ATTACHER_H_
+#ifndef GAZEBO_ROS_LINK_ATTACHER__GAZEBO_ROS_LINK_ATTACHER_HPP_
+#define GAZEBO_ROS_LINK_ATTACHER__GAZEBO_ROS_LINK_ATTACHER_HPP_
 
 #include <memory>
 #include <string>
@@ -60,7 +60,7 @@ struct fixedJoint
   physics::JointPtr joint;
 };
 
-class GazeboRosLinkAttacher: public WorldPlugin
+class GazeboRosLinkAttacher : public WorldPlugin
 {
 public:
   /// \brief Constructor
@@ -88,17 +88,17 @@ public:
 
 private:
   gazebo_ros::Node::SharedPtr node_;
-  rclcpp::Service < gazebo_ros_link_attacher::srv::Attach > ::SharedPtr attach_service_;
-  rclcpp::Service < gazebo_ros_link_attacher::srv::Attach > ::SharedPtr detach_service_;
+  rclcpp::Service<gazebo_ros_link_attacher::srv::Attach>::SharedPtr attach_service_;
+  rclcpp::Service<gazebo_ros_link_attacher::srv::Attach>::SharedPtr detach_service_;
 
   bool attach_callback(
-    const std::shared_ptr < gazebo_ros_link_attacher::srv::Attach::Request > req,
-    std::shared_ptr < gazebo_ros_link_attacher::srv::Attach::Response > res);
+    const std::shared_ptr<gazebo_ros_link_attacher::srv::Attach::Request> req,
+    std::shared_ptr<gazebo_ros_link_attacher::srv::Attach::Response> res);
   bool detach_callback(
-    const std::shared_ptr < gazebo_ros_link_attacher::srv::Attach::Request > req,
-    std::shared_ptr < gazebo_ros_link_attacher::srv::Attach::Response > res);
+    const std::shared_ptr<gazebo_ros_link_attacher::srv::Attach::Request> req,
+    std::shared_ptr<gazebo_ros_link_attacher::srv::Attach::Response> res);
 
-  std::vector < fixedJoint > joints_;
+  std::vector<fixedJoint> joints_;
 
   /// \brief The physics engine.
   physics::PhysicsEnginePtr physics;
@@ -107,4 +107,4 @@ private:
   physics::WorldPtr world;
 };
 }  // namespace gazebo
-#endif  // GAZEBO_ROS_LINK_ATTACHER__GAZEBO_ROS_LINK_ATTACHER_H_
+#endif  // GAZEBO_ROS_LINK_ATTACHER__GAZEBO_ROS_LINK_ATTACHER_HPP_

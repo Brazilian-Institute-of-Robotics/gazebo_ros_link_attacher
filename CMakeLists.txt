@@ -91,7 +91,7 @@ set(SCRIPTS
 # Install each script
 foreach(SCRIPT ${SCRIPTS})
   install(PROGRAMS
-    scripts/${SCRIPT}
+    examples/${SCRIPT}
     DESTINATION lib/${PROJECT_NAME}
   )
 endforeach()

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gazebo_ros_link_attacher/gazebo_ros_link_attacher.h>
+#include <gazebo_ros_link_attacher/gazebo_ros_link_attacher.hpp>
 
 namespace gazebo
 {
